@@ -18,6 +18,16 @@ var (
 	version = "v0.0.1"
 )
 
+var versionCmd = &cobra.Command{
+	Use:     "version",
+	Aliases: []string{"v"},
+	Short:   "Print the version number of cdpcurl",
+	Long:    `All software has versions. This is cdpcurl's`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("cdpcurl version", version)
+	},
+}
+
 func main() {
 	var data, method, apiKeyPath, header string
 	cmd := &cobra.Command{
@@ -73,20 +83,12 @@ func main() {
 			return nil
 		},
 	}
-	cmd.Flags().BoolP("version", "v", false, "Print the version number and exit")
-
 	cmd.Flags().StringVarP(&data, "data", "d", "", "HTTP Body")
 	cmd.Flags().StringVarP(&apiKeyPath, "api-key-path", "k", "", "API Key Path")
 	cmd.Flags().StringVarP(&method, "method", "X", "GET", "HTTP Method")
 	cmd.Flags().StringVarP(&header, "header", "H", "", "HTTP Header")
 
-	cmd.PreRunE = func(cmd *cobra.Command, args []string) error {
-		if versionFlag, _ := cmd.Flags().GetBool("version"); versionFlag {
-			fmt.Printf("cdpcurl version %s\n", version)
-			return fmt.Errorf("version flag provided")
-		}
-		return nil
-	}
+	cmd.AddCommand(versionCmd)
 
 	if err := cmd.Execute(); err != nil {
 		log.Fatal(err)
