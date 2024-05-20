@@ -30,12 +30,9 @@ var versionCmd = &cobra.Command{
 func main() {
 	var data, method, apiKeyPath, header string
 	cmd := &cobra.Command{
-		Use: "cdpcurl [URL]",
+		Use:  "cdpcurl [flags] [URL]",
+		Args: cobra.MinimumNArgs(1), // Ensure at least one argument is provided
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if err := cobra.MinimumNArgs(1)(cmd, args); err != nil {
-				return err
-			}
-
 			opts := []transport.Option{}
 			if apiKeyPath != "" {
 				opts = append(opts, transport.WithAPIKeyLoaderOption(transport.WithPath(apiKeyPath)))
@@ -98,6 +95,18 @@ func main() {
 	}
 
 	cmd.AddCommand(versionCmd)
+
+	// Custom usage template
+	customUsage := `Usage:
+  {{.UseLine}}
+
+Flags:
+{{.LocalFlags.FlagUsages | trimTrailingWhitespaces}}
+
+Use "{{.CommandPath}} [command] --help" for more information about a command.
+`
+
+	cmd.SetUsageTemplate(customUsage)
 
 	if err := cmd.Execute(); err != nil {
 		log.Fatal(err)
