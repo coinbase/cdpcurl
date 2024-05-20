@@ -9,11 +9,11 @@
 `go install github.com/coinbase/cdpcurl@latest`
 
 ## Example Usage
-### Get account balance of BTC with Sign In With Coinbase (SIWC) API
+### Get account balance of BTC with Sign In With Coinbase API
 ```
 cdpcurl -k ~/Downloads/cdp_api_key.json 'https://api.coinbase.com/v2/accounts/BTC'
 ```
-### Get the latest price of BTC with Retail Advanced Trading (RAT) API
+### Get the latest price of BTC with Advanced Trading API
 ```
 cdpcurl -k ~/Downloads/cdp_api_key.json 'https://api.coinbase.com/api/v3/brokerage/products/BTC-USDC'
 ```
