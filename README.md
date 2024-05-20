@@ -21,5 +21,3 @@ cdpcurl -k ~/Downloads/cdp_api_key.json 'https://api.coinbase.com/api/v3/brokera
 ```
 cdpcurl -k ~/Downloads/cdp_api_key.json -X POST -d '{"wallet": {"network_id": "ethereum-sepolia"}}' 'https://api.developer.coinbase.com/platform/v1/wallets'
 ```
-
-
