@@ -14,6 +14,20 @@ import (
 	"encoding/json"
 )
 
+var (
+	version = "v0.0.1"
+)
+
+var versionCmd = &cobra.Command{
+	Use:     "version",
+	Aliases: []string{"v"},
+	Short:   "Print the version number of cdpcurl",
+	Long:    `All software has versions. This is cdpcurl's`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("cdpcurl version", version)
+	},
+}
+
 func main() {
 	var data, method, apiKeyPath, header string
 	cmd := &cobra.Command{
@@ -73,6 +87,9 @@ func main() {
 	cmd.Flags().StringVarP(&apiKeyPath, "api-key-path", "k", "", "API Key Path")
 	cmd.Flags().StringVarP(&method, "method", "X", "GET", "HTTP Method")
 	cmd.Flags().StringVarP(&header, "header", "H", "", "HTTP Header")
+
+	cmd.AddCommand(versionCmd)
+
 	if err := cmd.Execute(); err != nil {
 		log.Fatal(err)
 	}
