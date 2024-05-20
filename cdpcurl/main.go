@@ -92,7 +92,7 @@ func main() {
 	cmd.PreRun = func(cmd *cobra.Command, args []string) {
 		versionFlag, _ := cmd.Flags().GetBool("version")
 		if versionFlag {
-			fmt.Println("cdpcurl version", version)
+			fmt.Println(version)
 			os.Exit(0)
 		}
 	}
