@@ -6,12 +6,11 @@ import (
 	"io"
 	"log"
 	"net/http"
-
-	"github.com/coinbase/cdpcurl/transport"
-
-	"github.com/spf13/cobra"
+	"os"
 
 	"encoding/json"
+	"github.com/coinbase/cdpcurl/transport"
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -24,7 +23,7 @@ var versionCmd = &cobra.Command{
 	Short:   "Print the version number of cdpcurl",
 	Long:    `All software has versions. This is cdpcurl's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("cdpcurl version", version)
+		fmt.Println(version)
 	},
 }
 
@@ -83,10 +82,20 @@ func main() {
 			return nil
 		},
 	}
+
 	cmd.Flags().StringVarP(&data, "data", "d", "", "HTTP Body")
 	cmd.Flags().StringVarP(&apiKeyPath, "api-key-path", "k", "", "API Key Path")
 	cmd.Flags().StringVarP(&method, "method", "X", "GET", "HTTP Method")
 	cmd.Flags().StringVarP(&header, "header", "H", "", "HTTP Header")
+	cmd.PersistentFlags().BoolP("version", "v", false, "Print the version number and exit")
+
+	cmd.PreRun = func(cmd *cobra.Command, args []string) {
+		versionFlag, _ := cmd.Flags().GetBool("version")
+		if versionFlag {
+			fmt.Println("cdpcurl version", version)
+			os.Exit(0)
+		}
+	}
 
 	cmd.AddCommand(versionCmd)
 
