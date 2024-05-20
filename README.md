@@ -19,5 +19,5 @@ cdpcurl -k ~/Downloads/cdp_api_key.json 'https://api.coinbase.com/api/v3/brokera
 ```
 ### Create a wallet on Base Sepolia with Platform API
 ```
-cdpcurl -k ~/Downloads/cdp_api_key.json -X POST -d '{"wallet": {"network_id": "ethereum-sepolia"}}' 'https://api.developer.coinbase.com/platform/v1/wallets'
+cdpcurl -k ~/Downloads/cdp_api_key.json -X POST -d '{"wallet": {"network_id": "base-sepolia"}}' 'https://api.developer.coinbase.com/platform/v1/wallets'
 ```
