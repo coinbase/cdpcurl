@@ -3,7 +3,10 @@
 `cdpcurl` is a tool that allows you to make HTTP requests to the Coinbase API with your CDP (Coinbase Developer Platform) API key. It is a wrapper around curl that automatically adds the necessary headers to authenticate your requests.
 
 ## Installation via Homebrew
-`brew install cdpcurl`
+```
+brew tap coinbase/cdpcurl
+brew install cdpcurl
+```
 
 ## Installation via Go
 `go install github.com/coinbase/cdpcurl@latest`
