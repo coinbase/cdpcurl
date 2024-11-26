@@ -4,7 +4,7 @@
 
 ## Installation
 
-## Homebrew
+### Homebrew
 
 ```bash
 brew tap coinbase/cdpcurl
