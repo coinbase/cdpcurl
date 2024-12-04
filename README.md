@@ -11,7 +11,7 @@ brew tap coinbase/cdpcurl
 brew install cdpcurl
 ```
 
-### AUR
+### AUR (_Thanks for the [contribution](https://github.com/coinbase/cdpcurl/pull/27) from @ThatOneCalculator!_)
 
 ```bash
 yay -S cdpcurl-git
