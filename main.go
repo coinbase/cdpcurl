@@ -2,19 +2,19 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 
-	"encoding/json"
 	"github.com/coinbase/cdpcurl/transport"
 	"github.com/spf13/cobra"
 )
 
 var (
-	version = "v0.0.1"
+	version = "v0.0.4"
 )
 
 var versionCmd = &cobra.Command{
@@ -69,12 +69,16 @@ func main() {
 			if err != nil {
 				return err
 			}
+			defer resp.Body.Close()
 
+			// Read response body
 			body, err := io.ReadAll(resp.Body)
 			if err != nil {
 				return err
 			}
 
+			// Print HTTP status code and response body
+			fmt.Println(resp.Status)
 			fmt.Println(string(body))
 			return nil
 		},
