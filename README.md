@@ -4,8 +4,6 @@
 
 To use with Ed25519 keys (Edwards keys), please upgrade to the latest version.
 
-```bash
-
 ## Installation
 
 ### Homebrew
