@@ -44,11 +44,14 @@ func (a *APIKey) UnmarshalJSON(data []byte) error {
 }
 
 type apiKeyLoaderConfig struct {
-	filename string
-	path     string
-	envvars  map[string]string
-	envOnly  bool
-	fileOnly bool
+	filename        string
+	path            string
+	envvars         map[string]string
+	envOnly         bool
+	fileOnly        bool
+	directID        string
+	directSecret    string
+	useDirectValues bool
 }
 
 const (
@@ -91,6 +94,14 @@ func WithFileOnly() LoadAPIKeyOption {
 	return func(c *apiKeyLoaderConfig) {
 		c.fileOnly = true
 		c.envOnly = false
+	}
+}
+
+func WithDirectIDAndSecret(id, secret string) LoadAPIKeyOption {
+	return func(c *apiKeyLoaderConfig) {
+		c.directID = id
+		c.directSecret = secret
+		c.useDirectValues = true
 	}
 }
 
@@ -167,6 +178,16 @@ func (c *apiKeyLoaderConfig) loadApiKeyFromFile(a *APIKey) error {
 }
 
 func (c *apiKeyLoaderConfig) loadApiKeyFromEnv(a *APIKey) {
+	if c.useDirectValues {
+		if a.Name == "" {
+			a.Name = c.directID
+		}
+		if a.PrivateKey == "" {
+			a.PrivateKey = c.directSecret
+		}
+		return
+	}
+
 	if a.Name == "" {
 		a.Name = os.Getenv(c.envvars[nameEnvVar])
 	}
