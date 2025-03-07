@@ -106,8 +106,8 @@ func main() {
 	cmd.Flags().StringVarP(&method, "method", "X", "GET", "HTTP Method")
 	cmd.Flags().StringVarP(&header, "header", "H", "", "HTTP Header")
 	cmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "Print the version number and exit")
-	cmd.Flags().StringVarP(&id, "id", "i", "", "API Key ID")
-	cmd.Flags().StringVarP(&secret, "secret", "s", "", "API Key Secret")
+	cmd.Flags().StringVarP(&id, "id", "i", "", "API Key ID (only works with Ed25519 keys)")
+	cmd.Flags().StringVarP(&secret, "secret", "s", "", "API Key Secret (only works with Ed25519 keys)")
 
 	cmd.AddCommand(versionCmd)
 

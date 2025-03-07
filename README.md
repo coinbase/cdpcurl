@@ -32,13 +32,13 @@ go install github.com/coinbase/cdpcurl@latest
 cdpcurl -k ~/Downloads/cdp_api_key.json 'https://api.coinbase.com/v2/accounts/BTC'
 ```
 
-### Get the latest price of BTC with Advanced Trading API using key ID and secret
+### Get the latest price of BTC with Advanced Trading API 
 ```bash
-cdpcurl -i '{KEY_ID}' -s '{SECRET}' 'https://api.coinbase.com/api/v3/brokerage/products/BTC-USDC'
+cdpcurl -k ~/Downloads/cdp_api_key.json 'https://api.coinbase.com/api/v3/brokerage/products/BTC-USDC'
 ```
 
-### Create a wallet on Base Sepolia with Platform API
+### Create a wallet on Base Sepolia with Platform API using key ID and secret
 
 ```bash
-cdpcurl -k ~/Downloads/cdp_api_key.json -X POST -d '{"wallet": {"network_id": "base-sepolia"}}' 'https://api.developer.coinbase.com/platform/v1/wallets'
+cdpcurl -i '{KEY_ID}' -s '{SECRET}' -X POST -d '{"wallet": {"network_id": "base-sepolia"}}' 'https://api.developer.coinbase.com/platform/v1/wallets'
 ```
