@@ -21,12 +21,14 @@ type transport struct {
 	originalTransport http.RoundTripper
 	authenticator     *auth.Authenticator
 	serviceName       string
+	debug             bool
 }
 
 type Option func(o *options)
 
 type options struct {
 	apiKey *auth.APIKey
+	debug  bool
 
 	apiKeyOptions []auth.LoadAPIKeyOption
 }
@@ -40,6 +42,12 @@ func WithAPIKeyLoaderOption(opt auth.LoadAPIKeyOption) Option {
 func WithAPIKey(apiKey *auth.APIKey) Option {
 	return func(o *options) {
 		o.apiKey = apiKey
+	}
+}
+
+func WithDebug(debug bool) Option {
+	return func(o *options) {
+		o.debug = debug
 	}
 }
 
@@ -65,6 +73,7 @@ func New(service string, originalTransport http.RoundTripper, opts ...Option) (h
 		originalTransport: originalTransport,
 		authenticator:     authenticator,
 		serviceName:       service,
+		debug:             o.debug,
 	}, nil
 }
 
@@ -76,6 +85,11 @@ func (t *transport) RoundTrip(req *http.Request) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if t.debug {
+		fmt.Println(jwt)
+	}
+
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", jwt))
 	return t.originalTransport.RoundTrip(req)
 }
