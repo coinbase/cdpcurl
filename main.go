@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	version = "v0.0.6"
+	version = "v0.0.7"
 )
 
 var versionCmd = &cobra.Command{
@@ -29,7 +29,7 @@ var versionCmd = &cobra.Command{
 
 func main() {
 	var data, method, apiKeyPath, header string
-	var versionFlag bool
+	var versionFlag, statusFlag, debugFlag bool
 	var id, secret string
 
 	cmd := &cobra.Command{
@@ -45,7 +45,10 @@ func main() {
 				return fmt.Errorf("URL is required unless using -v")
 			}
 
-			opts := []transport.Option{}
+			opts := []transport.Option{
+				transport.WithDebug(debugFlag),
+			}
+
 			if apiKeyPath != "" {
 				opts = append(opts, transport.WithAPIKeyLoaderOption(transport.WithPath(apiKeyPath)))
 			}
@@ -94,8 +97,12 @@ func main() {
 				return err
 			}
 
-			// Print HTTP status code and response body
-			fmt.Println(resp.Status)
+			// Print HTTP status code only if the status flag is set
+			if statusFlag {
+				fmt.Println(resp.Status)
+			}
+
+			// Always print the response body
 			fmt.Println(string(body))
 			return nil
 		},
@@ -108,6 +115,8 @@ func main() {
 	cmd.Flags().BoolVarP(&versionFlag, "version", "v", false, "Print the version number and exit")
 	cmd.Flags().StringVarP(&id, "id", "i", "", "API Key ID (only works with Ed25519 keys)")
 	cmd.Flags().StringVarP(&secret, "secret", "s", "", "API Key Secret (only works with Ed25519 keys)")
+	cmd.Flags().BoolVarP(&statusFlag, "status", "S", false, "Print the HTTP status code in addition to the response body")
+	cmd.Flags().BoolVarP(&debugFlag, "debug", "D", false, "Enable debug mode")
 
 	cmd.AddCommand(versionCmd)
 
