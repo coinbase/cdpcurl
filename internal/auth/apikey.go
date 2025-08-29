@@ -9,7 +9,7 @@ import (
 
 type APIKey struct {
 	Name       string
-	PrivateKey string
+	PrivateKey string `json:"privateKey"`
 }
 
 // UnmarshalJSON allows APIKey to support both the old and new JSON field names.
@@ -132,7 +132,7 @@ func LoadAPIKey(options ...LoadAPIKeyOption) (*APIKey, error) {
 	if apiKey.Name == "" || apiKey.PrivateKey == "" {
 		return nil, fmt.Errorf("api key loader: could not load api key")
 	}
-
+ 
 	return apiKey, nil
 }
 

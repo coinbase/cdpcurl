@@ -10,11 +10,12 @@ import (
 type APIKey = auth.APIKey
 
 var (
-	WithENVVariableNames = auth.WithENVVariableNames
-	WithENVOnly          = auth.WithENVOnly
-	WithFileName         = auth.WithFileName
-	WithFileOnly         = auth.WithFileOnly
-	WithPath             = auth.WithPath
+	WithENVVariableNames  = auth.WithENVVariableNames
+	WithENVOnly           = auth.WithENVOnly
+	WithFileName          = auth.WithFileName
+	WithFileOnly          = auth.WithFileOnly
+	WithPath              = auth.WithPath
+	WithDirectIDAndSecret = auth.WithDirectIDAndSecret
 )
 
 type transport struct {

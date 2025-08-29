@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"gopkg.in/square/go-jose.v2"
-	"gopkg.in/square/go-jose.v2/jwt"
+	"github.com/go-jose/go-jose/v4"
+	"github.com/go-jose/go-jose/v4/jwt"
 )
 
 type APIKeyClaims struct {
@@ -42,11 +42,12 @@ func NewFromConfig(apiKey APIKey) *Authenticator {
 }
 
 func (a *Authenticator) BuildJWT(service string, uris []string) (string, error) {
-	keyStr := a.apiKey.PrivateKey
 	var (
-		key interface{}
+		key any
 		alg jose.SignatureAlgorithm
 	)
+
+	keyStr := a.apiKey.PrivateKey
 
 	// If the key starts with a PEM header, parse it as an ECDSA key.
 	if strings.HasPrefix(keyStr, "-----BEGIN") {
@@ -72,13 +73,20 @@ func (a *Authenticator) BuildJWT(service string, uris []string) (string, error) 
 		key = ed25519.PrivateKey(decodedKey)
 		alg = jose.EdDSA
 	}
+	
+	// Prepare the JOSE signer options.
+	jsonSignatureOptions := &jose.SignerOptions{}
+	// Set the "typ" header to "JWT"
+	jsonSignatureOptions.WithType("JWT")
+	// Set the "kid" header to the API key name
+	jsonSignatureOptions.WithHeader("kid", a.apiKey.Name)
+	// Set a custom nonce source to generate a unique nonce for each token
+	jsonSignatureOptions.NonceSource = nonceSource{}
 
 	// Create the JOSE signer with the appropriate algorithm.
 	sig, err := jose.NewSigner(
 		jose.SigningKey{Algorithm: alg, Key: key},
-		(&jose.SignerOptions{NonceSource: nonceSource{}}).
-			WithType("JWT").
-			WithHeader("kid", a.apiKey.Name),
+		jsonSignatureOptions,
 	)
 	if err != nil {
 		return "", fmt.Errorf("jwt: error creating signer: %w", err)
@@ -97,7 +105,7 @@ func (a *Authenticator) BuildJWT(service string, uris []string) (string, error) 
 	}
 
 	// Serialize the JWT.
-	jwtString, err := jwt.Signed(sig).Claims(claims).CompactSerialize()
+	jwtString, err := jwt.Signed(sig).Claims(claims).Serialize()
 	if err != nil {
 		return "", fmt.Errorf("jwt: error serializing token: %w", err)
 	}

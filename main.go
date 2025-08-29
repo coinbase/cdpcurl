@@ -8,14 +8,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/coinbase/cdpcurl/internal/auth"
 	"github.com/coinbase/cdpcurl/transport"
 	"github.com/spf13/cobra"
 )
 
-var (
-	version = "v0.0.6"
-)
+const version = "v0.0.6"
 
 var versionCmd = &cobra.Command{
 	Use:     "version",
@@ -28,10 +25,12 @@ var versionCmd = &cobra.Command{
 }
 
 func main() {
+	// Define flags
 	var data, method, apiKeyPath, header string
 	var versionFlag bool
 	var id, secret string
 
+	// Create root command
 	cmd := &cobra.Command{
 		Use:  "cdpcurl [flags] [URL]",
 		Args: cobra.MinimumNArgs(0), // Allow zero arguments to handle -v
@@ -52,7 +51,7 @@ func main() {
 
 			// Add options for id and secret if they are provided
 			if id != "" && secret != "" {
-				opts = append(opts, transport.WithAPIKeyLoaderOption(auth.WithDirectIDAndSecret(id, secret)))
+				opts = append(opts, transport.WithAPIKeyLoaderOption(transport.WithDirectIDAndSecret(id, secret)))
 			}
 
 			authTransport, err := transport.New("", http.DefaultTransport, opts...)
@@ -60,6 +59,7 @@ func main() {
 				return err
 			}
 
+			// create HTTP request
 			req, err := http.NewRequest(method, args[0], bytes.NewBufferString(data))
 			if err != nil {
 				return err
@@ -101,6 +101,7 @@ func main() {
 		},
 	}
 
+	// consume flags
 	cmd.Flags().StringVarP(&data, "data", "d", "", "HTTP Body")
 	cmd.Flags().StringVarP(&apiKeyPath, "api-key-path", "k", "", "API Key Path")
 	cmd.Flags().StringVarP(&method, "method", "X", "GET", "HTTP Method")
